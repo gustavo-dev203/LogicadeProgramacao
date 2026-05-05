@@ -1,12 +1,12 @@
 lista = ['gomes', 'fulano', 'cicrano', 'beltrano', 'lucas', 'matheus', 'pedro']
 
-# print(lista)
+print(lista)
 
-# print(lista[0])
+print(lista[0])
 
-# print(lista[-1])
+print(lista[-1])
 
-# print (lista [0:3])
+print (lista [0:3])
 
 lista.sort()
 
