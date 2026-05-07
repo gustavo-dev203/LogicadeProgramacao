@@ -68,7 +68,7 @@ with open('frutas.txt', "r") as arquivo:
 # exemplo para cadastro
 
 while True:
-    nome = input('Digite seu nome: ').title()
+    nome = int(input('Digite seu nome: ')).title()
 
     with open ('cadastro.txt', 'a') as arquivo:
         arquivo.write(nome + '\n')
