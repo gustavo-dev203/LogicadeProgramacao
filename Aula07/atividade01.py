@@ -1,118 +1,138 @@
 '''
 
-Desenvolva um sistema de gerenciamente de Carros com realização do CRUD
+Desenvolva um sistema de gerenciamento de veiculos, permita cadastrar o veículo pegando do usuário os seguintes dados (modelo, marca, preço)
+    - Os dados devem ser armazenados em um arquivo.
+    - o usuário deve poder cadastrar quantos carros quiser sem ter que rodar o sistema novamente.
+    - deve ter a opção de ler os carros existentes
+    - devem ser cadastrados eu um arquivo .txt e usar dicionário.
 
 '''
-import os
 import time
+import os
+carros=[]
+proximo_id=1
 
-carros = []
-proximo_id = 1
+open("carros.txt", "a").close()
 
-os.system('cls')
-while True:
-    print('\n============= Sistema de Carros 🚗 =============')
-    print('1 - Cadastrar Carros')
-    print('2 - Listar Carros')
-    print('3 - Atualizar Carros')
-    print('4 - Deletar Carros')
-    print('0 - Sair')
+with open("carros.txt", "r", encoding="utf-8") as arquivo:
+    for linha in arquivo:
 
-    opcao = input('Escolha uma opção: ')
+        dados=linha.strip().split(";")
 
-    os.system('cls')
+        if len(dados)==4:
 
-    #create
-    
-    if opcao == '1':
-        while True:
-            modelo = input('Digite o modelo do carro: ').title()
-            preco = input('Digite o preço: ')
-            marca = input('Digite a marca: ').title()
-
-            carro = {
-                "id"         : proximo_id,
-                "modelo"    : modelo,
-                "preco"      : preco,
-                "marca"      : marca
+            carro ={
+                "id": int(dados[0]),
+                "modelo": dados[1],
+                "preço": dados[2],
+                "marca": dados[3]
             }
 
-            with open('carros.txt', "a") as arquivo:
-                    arquivo.write(f'ID: {carro['id']} | Modelo {carro['modelo']} | Preco {carro['preco']} | Marca {carro['marca']}\n')
+            carros.append(carro)
 
+            if carro["id"] >= proximo_id:
+                proximo_id = carro["id"] + 1
 
-            proximo_id += 1
+os.system("cls")
+while True:
+    print("\n----------------- Sistema de carros 🚗 -----------------")
+    print('1. cadastrar carros')
+    print('2. listar carros')
+    print('3. Atualizar carros')
+    print('4. deletar carros')
+    print('0. sair')
 
-            print('✅ Carro Cadastrado com sucesso!')
-            sair = input('Deseja sair do sistema? s/n: ').lower()
+    opcao=input("escolha uma das opções: ")
 
-            if sair == "s":
+    #create
+    if opcao=="1":
+        os.system("cls")
+        while True:
+            modelo = input("Digite o modelo do carro: ").title()
+            preco = input('Digite o preço do carro: ').replace(',','.')
+            marca = input("Digite a marca: ").title()
+
+            carro ={
+                "id": proximo_id,
+                "modelo": modelo,
+                "preço": preco,
+                "marca": marca
+
+            }
+            
+            carros.append(carro)
+            proximo_id +=1
+            print('✅ Carro cadastrado')
+            sair = input("Deseja adicionar mais? (s - sim) ou enter para parar!").lower()
+            if sair !="s":
                 break
-
-            time.sleep(1)
-            os.system('cls')
 
     #read
-    elif opcao == '2':
-        print('\n 📋 Lista de carros')
-        with open('carros.txt', "r") as arquivo:
-            for linha in arquivo:
-                print(linha.strip())
-
+    elif opcao =="2":
+        os.system("cls")
+        if not carros:
+            print('⚠️ Nenhum carro encontrado')
+        else:
+            print('\n📋 Lista de carros')
+            for carro in carros:
+                print(f'ID: {carro['id']} | Modelo: {carro['modelo']} | Preço: {carro['preço']} | Marca: {carro['marca']}')
 
     #update
-    elif opcao == '3':
-        print('\n 📋 Lista de carros')
+    elif opcao =='3':
+        os.system("cls")
+        print('\n📋 Lista de carros')
         for carro in carros:
-            print(f'ID: {carro['id']} | Modelo {carro['modelo']} | Preço {carro['preco']} | Marca {carro['marca']}')
+            print(f'ID: {carro['id']} | Modelo: {carro['modelo']} | Preço: {carro['preço']} | Marca: {carro['marca']}')
+        id_busca = int(input("Digite o id do carro para deletar: "))
 
-        id_busca = int(input('Digite o ID do carro para deletar: '))
-
-        encontrado = False
-
+        encontrado=False
         for carro in carros:
-            if carro ['id'] == id_busca:
+            if carro['id']==id_busca:
                 novo_modelo = input('Digite o novo modelo: ').title()
-                novo_preco = float(input('Digite o novo preço: ').replace(',', '.'))
+                novo_preco = input('Digite o novo preço: ').replace(',','.')
                 nova_marca = input('Digite a nova marca: ').title()
 
-                carro['modelo'] = novo_modelo
-                carro['preco'] = novo_preco
-                carro['marca'] = nova_marca
+                carro["modelo"] = novo_modelo
+                carro["preço"] = novo_preco
+                carro["marca"] = nova_marca
 
-                print('✅ Carro atualizado com sucesso!')
+                print("✅ Carro encontrado com sucesso! ")
                 encontrado = True
                 break
         if not encontrado:
-            print('❌ Carro não encontrado!')
-
-        time.sleep(3)
-        os.system('cls')
-
+            print("❌ Carro não encontrado!")
+                
     #delete
-    elif opcao == '4':
-        print('\n 📋 Lista de carros')
+    elif opcao =='4':
+        os.system("cls")
+        print('\n📋 Lista de carros')
         for carro in carros:
-            print(f'ID: {carro['id']} | Modelo {carro['modelo']} | Preço {carro['preco']} | Marca {carro['marca']}')
-
-        id_busca = int(input('Digite o ID do carro para deletar: '))
-
-        encontrado = False
+            print(f'ID: {carro['id']} | Modelo: {carro['modelo']} | Preço: {carro['preço']} | Marca: {carro['marca']}')
+        id_busca = int(input("Digite o id do carro para deletar: "))
+       
+        encontrado=False
 
         for carro in carros:
-            if carro ['id'] == id_busca:
+            if carro['id']==id_busca:
                 carros.remove(carro)
-                print('✅ Carro deletado com sucesso!')
-                encontrado = True
+                print("✅ Carro deletado com sucesso")
+                encontrado=True
                 break
+
         if not encontrado:
-            print('❌ Carro não encontrado!')
+            print("❌ Carro não encontrado!")
 
-        time.sleep(3)
-        os.system('cls')
-
-    #Sair
+    #sair
     elif opcao == '0':
+        with open("carros.txt", "w", encoding="utf-8") as arquivo:
+            for carro in carros:
+                linha = (
+                    f"{carro['id']};"
+                    f"{carro['modelo']};"
+                    f"{carro['preço']};"
+                    f"{carro['marca']}\n"
+                )
+                arquivo.write(linha)
         total = 20
         barra =""
         print('Saindo do Sistema...')
